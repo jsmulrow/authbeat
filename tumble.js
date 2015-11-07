@@ -51,8 +51,8 @@ function tumbleIntervals(intervals, pass) {
 // compare two tumbled intervals
 function compareTumbled(str1, str2) {
 	var kError = 30; // number of milliseconds error permitted
-	for (int i = 4; i < str1.length, i += 4) {
-		if (abs(str1.substring(i-4, i) - str2.substring(i-4, i)) > 30) {
+	for (var i = 0; i < str1.length; i += 4) {
+		if (Math.abs(str1.substring(i, i + 4) - str2.substring(i, i + 4)) > 30) {
 			return false;
 		}
 	}
