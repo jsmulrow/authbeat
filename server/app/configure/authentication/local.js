@@ -4,6 +4,7 @@ var _ = require('lodash');
 var LocalStrategy = require('passport-local').Strategy;
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
+var tumble = require('../../../../tumble.js');
 
 module.exports = function (app) {
 
@@ -41,6 +42,12 @@ module.exports = function (app) {
 
             // validate authbeat intervals
             //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+            console.log("old intervals", user.intervals, "new intervals", req.body.intervals);
+            if (!tumble.compareTumbled(req.body.intervals, user.intervals, user.password)) {
+                var error = new Error('Invalid login credentials.');
+                error.status = 401;
+                return next(error);
+            }
 
             // req.logIn will establish our session.
             req.logIn(user, function (loginErr) {

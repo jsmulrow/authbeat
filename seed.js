@@ -17,30 +17,36 @@ name in the environment files.
 
 */
 
+var tumble = require('./tumble');
+
 var mongoose = require('mongoose');
 var Promise = require('bluebird');
 var chalk = require('chalk');
 var connectToDb = require('./server/db');
 var User = Promise.promisifyAll(mongoose.model('User'));
 
+var wipeDB = function() {
+    var models = [User];
+    var promiseArr = [];
+    models.forEach(function(model) {
+        promiseArr.push(model.find({}).remove().exec());
+    });
+
+    return Promise.all(promiseArr);
+};
+
 var seedUsers = function () {
 
     var users = [
         {
-            email: 'testing@fsa.com',
-            password: 'password'
-        },
-        {
-            email: 'obama@gmail.com',
-            password: 'potus'
-        },
-        {
             email: 'jack@mulrow.com',
-            password: 'jack'
+            password: 'jjj',
+            intervals: '275250' // hap-py birth-day to you
         },
         {
             email: 'eric@ho.com',
-            password: 'eric'
+            password: 'jjjjjj',
+            intervals: '351135528411416' // hap-py birth-day to you
         }
     ];
 
@@ -49,14 +55,25 @@ var seedUsers = function () {
 };
 
 connectToDb.then(function () {
-    User.findAsync({}).then(function (users) {
-        if (users.length === 0) {
-            return seedUsers();
-        } else {
-            console.log(chalk.magenta('Seems to already be user data, exiting!'));
-            process.kill(0);
-        }
-    }).then(function () {
+    wipeDB().then(function() {
+      return User.findAsync({}); 
+    }).then(function (users) {
+        return seedUsers();
+    }).then(function (users) {
+        return User.findOneAsync({email: 'jack@mulrow.com'});
+    }).then(function (user) {
+        console.log(user);
+        user.intervals = tumble.tumbleIntervals(user.intervals, user.password);
+        return user.save();
+    }).then(function(user) {
+        console.log('updated user', user);
+        return User.findOneAsync({email: 'eric@ho.com'});
+    }).then(function (user) {
+        console.log(user);
+        user.intervals = tumble.tumbleIntervals(user.intervals, user.password);
+        return user.save();
+    }).then(function(user) {
+        console.log('updated user', user);
         console.log(chalk.green('Seed successful!'));
         process.kill(0);
     }).catch(function (err) {

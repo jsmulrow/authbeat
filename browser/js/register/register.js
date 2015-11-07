@@ -25,11 +25,11 @@ app.controller('registerCtrl', function ($scope, AuthService, $state) {
 
         console.log("register info", registerInfo);
 
-        // AuthService.register(registerInfo).then(function () {
-        //     $state.go('home');
-        // }).catch(function () {
-        //     $scope.error = 'Invalid register credentials.';
-        // });
+        AuthService.register(registerInfo).then(function () {
+            $state.go('home');
+        }).catch(function () {
+            $scope.error = 'Invalid register credentials.';
+        });
 
     };
 

@@ -23,7 +23,7 @@ app.controller('LoginCtrl', function ($scope, AuthService, $state) {
 
         console.log(authbeatLoginIntervals);
 
-        loginInfo.intervals = authbeatLoginIntervals.toString();
+        loginInfo.intervals = authbeatLoginIntervals;
 
         console.log("login info", loginInfo);
 
