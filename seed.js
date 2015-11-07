@@ -41,12 +41,12 @@ var seedUsers = function () {
         {
             email: 'jack@mulrow.com',
             password: 'jjj',
-            intervals: '275250' // hap-py birth-day to you
+            intervals: '02750250' // hap-py birth-day to you
         },
         {
             email: 'eric@ho.com',
             password: 'jjjjjj',
-            intervals: '351135528411416' // hap-py birth-day to you
+            intervals: '03510135052804110416' // hap-py birth-day to you
         }
     ];
 
