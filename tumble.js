@@ -8,10 +8,11 @@ var CRC32 = require('crc-32');
 
 // obtains 32 bit representation of crc32 checksum of a string
 function getTumbler(str) {
+	var kCRC32 = 32; // number of bits in checksum
 	// converts crc32 checksum into binary
 	var bin = dec2bin(CRC32.str(str));
 	// pads binary string wtih 0's into full 32 bit representation
-	return Array(33 - bin.length).join('0') + bin;
+	return Array(kCRC32 - bin.length + 1).join('0') + bin;
 };
 
 // tumbles (reorders) intervals according to crc32 checksum of password
@@ -47,4 +48,16 @@ function tumbleIntervals(intervals, pass) {
 	return finish;
 };
 
-tumbleIntervals('0111011201130114','oijweoifjoiwj');
+// compare two intervals, the first of which is untumbled, the second is tumbled
+function compareTumbled(str1, str2, pass) {
+	var kError = 30; // number of milliseconds error permitted
+	str1tumble = tumbleIntervals(str1, pass);
+	for (var i = 0; i < str1tumble.length; i += 4) {
+		if (Math.abs(str1tumble.substring(i, i + 4) - str2.substring(i, i + 4)) > kError) {
+			return false;
+		}
+	}
+	return true;
+};
+
+module.exports = compareTumbled;
