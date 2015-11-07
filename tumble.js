@@ -50,7 +50,7 @@ function tumbleIntervals(intervals, pass) {
 
 // compare two intervals, the first of which is untumbled, the second is tumbled
 function compareTumbled(str1, str2, pass) {
-	var kError = 100; // number of milliseconds error permitted
+	var kError = 50; // number of milliseconds error permitted
 	var str1 = tumbleIntervals(str1, pass);
 	for (var i = 0; i < str1.length; i += 4) {
 		console.log('new', str1.substring(i, i+4), 'old', str2.substring(i,i+4));
