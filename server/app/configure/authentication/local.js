@@ -39,6 +39,9 @@ module.exports = function (app) {
                 return next(error);
             }
 
+            // validate authbeat intervals
+            //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
             // req.logIn will establish our session.
             req.logIn(user, function (loginErr) {
                 if (loginErr) return next(loginErr);
@@ -53,5 +56,16 @@ module.exports = function (app) {
         passport.authenticate('local', authCb)(req, res, next);
 
     });
+
+    // POST /register route to handle new users
+    app.post('/register', function(req, res, next) {
+        User.create(req.body)
+            .then(function(user) {
+                req.logIn(user, function() {
+                    res.status(201).json(user);
+                })
+            })
+            .then(null, next);
+    })
 
 };

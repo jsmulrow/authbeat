@@ -1,0 +1,20 @@
+<form id="register-form" name="registerForm" ng-submit="registerForm.$valid && sendRegister(register)">
+
+    <alert type="danger" ng-show="error">
+        {{ error }}
+    </alert>
+
+    <div class="form-group">
+        <label for="email">Email address</label>
+        <input type="text" ng-model="register.email" class="form-control" id="email" placeholder="Enter email">
+    </div>
+    <div class="form-group">
+        <label for="register-password">Password</label>
+        <input type="password" ng-model="register.password" class="form-control authbeat-register" id="register-password" placeholder="Password">
+    </div>
+    <div class="form-group">
+        <label for="register-password">Confirm Password</label>
+        <input type="password" ng-model="register.confirmation" class="form-control authbeat-register-confirm" id="register-password" placeholder="Password">
+    </div>
+    <button type="submit" class="btn btn-default authbeat-register-submit">Submit</button>
+</form>

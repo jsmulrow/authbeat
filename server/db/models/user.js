@@ -12,9 +12,9 @@ var schema = new mongoose.Schema({
     salt: {
         type: String
     },
-    // intervals: {
-    //     type: 
-    // }
+    intervals: {
+        type: String
+    }
 });
 
 // generateSalt, encryptPassword and the pre 'save' and 'correctPassword' operations

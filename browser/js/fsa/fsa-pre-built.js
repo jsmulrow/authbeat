@@ -100,10 +100,8 @@
             return $http.post('/register', credentials)
                 .then(onSuccessfulLogin)
                 .catch(function() {
-                    return $q.reject({
-                        message: 'Invalid login credentials.'
-                    });
-                })
+                    return $q.reject({ message: 'Invalid login credentials.' });
+                });
         };
 
     });

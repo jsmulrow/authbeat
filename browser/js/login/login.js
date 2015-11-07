@@ -21,9 +21,9 @@ app.controller('LoginCtrl', function ($scope, AuthService, $state) {
 
         $scope.error = null;
 
-        console.log(authbeatPasswordIntervals);
+        console.log(authbeatLoginIntervals);
 
-        loginInfo.intervals = authbeatPasswordIntervals;
+        loginInfo.intervals = authbeatLoginIntervals.toString();
 
         console.log("login info", loginInfo);
 
