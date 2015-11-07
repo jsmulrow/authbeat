@@ -48,13 +48,16 @@ function tumbleIntervals(intervals, pass) {
 	return finish;
 };
 
-// compare two tumbled intervals
-function compareTumbled(str1, str2) {
+// compare two intervals, the first of which is untumbled, the second is tumbled
+function compareTumbled(str1, str2, pass) {
 	var kError = 30; // number of milliseconds error permitted
-	for (var i = 0; i < str1.length; i += 4) {
-		if (Math.abs(str1.substring(i, i + 4) - str2.substring(i, i + 4)) > 30) {
+	str1tumble = tumbleIntervals(str1, pass);
+	for (var i = 0; i < str1tumble.length; i += 4) {
+		if (Math.abs(str1tumble.substring(i, i + 4) - str2.substring(i, i + 4)) > kError) {
 			return false;
 		}
 	}
 	return true;
 };
+
+module.exports = compareTumbled;
