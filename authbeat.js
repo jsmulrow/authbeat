@@ -1,14 +1,16 @@
-
-
 // file for the authbeat api
 
-// have user put authbeat id on the login input field
+// user puts authbeat id on the login input field
 var loginField = document.getElementById("authbeat");
 
-loginField.addEventListener('keydown', function() {
-	//
+// login input field listens for keypresses
+loginField.addEventListener('keydown', recordInterval);
 
-});
+function recordInterval() {
+	// maybe have it reset after a certain amount of time
+
+	console.log(Date.now());
+}
 
 
 
