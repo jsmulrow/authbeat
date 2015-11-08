@@ -41,10 +41,8 @@ module.exports = function (app) {
             }
 
             // validate authbeat intervals
-            //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-            console.log("old intervals", user.intervals, "new intervals", req.body.intervals);
             if (!tumble.compareTumbled(req.body.intervals, user.intervals, user.password)) {
-                var error = new Error('Invalid login credentials.');
+                var error = new Error('Invalid authbeat intervals.');
                 error.status = 401;
                 return next(error);
             }
@@ -68,6 +66,11 @@ module.exports = function (app) {
     app.post('/register', function(req, res, next) {
         User.create(req.body)
             .then(function(user) {
+                // tumble the intervals
+                user.intervals = tumble.tumbleIntervals(user.intervals, user.password);
+                return user.save();
+            }).then(function(user) {
+                // login the user
                 req.logIn(user, function() {
                     res.status(201).json(user);
                 })

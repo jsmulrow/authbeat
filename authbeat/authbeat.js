@@ -40,7 +40,6 @@ function authbeatLogin() {
 		}
 		// reset when backspace is pressed
 		if (e.which === 8 || e.which === 46) {
-			console.log("backspace");
 			authbeatLoginIntervals = [];
 			paused = true;
 			return;
@@ -59,7 +58,6 @@ function authbeatLogin() {
 	// reset on submission
 	function submitScript() {
 		authbeatLoginIntervals = authbeatLoginIntervals.join('');
-		console.log('submitting', authbeatLoginIntervals);
 		paused = true;
 	}
 
@@ -101,11 +99,16 @@ function authbeatRegister() {
 	var lastKeyPress = Date.now(); 
 	var paused = true;
 
+	var intervals = [];
+
 	// calculates intervals and stores them
 	function recordInterval(e) {
+		// ignore tab key
+		if (e.which === 9) return;
 		// skip first key press
 		if (paused) {
 			lastKeyPress = Date.now();
+			intervals = [];
 			authbeatRegisterIntervals = [];
 			paused = false
 			return;
@@ -117,8 +120,7 @@ function authbeatRegister() {
 		}
 		// reset when backspace is pressed
 		if (e.which === 8 || e.which === 46) {
-			console.log("backspace");
-			authbeatRegisterIntervals = [];
+			intervals = [];
 			paused = true;
 			return;
 		}
@@ -126,19 +128,25 @@ function authbeatRegister() {
 		// find interval, and add it to intervals array
 		var currentPress = Date.now();
 		var interval = currentPress - lastKeyPress;
-		authbeatRegisterIntervals.push(interval);
+		intervals.push(interval);
 		lastKeyPress = currentPress;
 	}
+
+	// global variables to capture state
+	var lastConfirmKeyPress = Date.now(); 
+	var confirmPaused = true;
 
 	confirmationIntervals = [];
 
 	// calculates intervals and stores them
 	function recordConfirmationInterval(e) {
+		if (e.which === 9) return;
 		// skip first key press
-		if (paused) {
-			lastKeyPress = Date.now();
+		if (confirmPaused) {
+			lastConfirmKeyPress = Date.now();
 			confirmationIntervals = [];
-			paused = false
+			authbeatRegisterIntervals = [];
+			confirmPaused = false
 			return;
 		}
 		// submit if enter is pressed
@@ -148,36 +156,50 @@ function authbeatRegister() {
 		}
 		// reset when backspace is pressed
 		if (e.which === 8 || e.which === 46) {
-			console.log("backspace");
 			confirmationIntervals = [];
-			paused = true;
+			confirmPaused = true;
 			return;
 		}
 
 		// find interval, and add it to intervals array
 		var currentPress = Date.now();
-		var interval = currentPress - lastKeyPress;
+		var interval = currentPress - lastConfirmKeyPress;
 		confirmationIntervals.push(interval);
-		lastKeyPress = currentPress;
+		lastConfirmKeyPress = currentPress;
 	}
 
 	/* script for submission */
 
 	// on submission combine confirm intervals with initial intervals
 	function confirmSubmitScript() {
-		console.log('submitting', authbeatPasswordIntervals);
-		if (authbeatRegisterIntervals.length !== confirmationIntervals.length) {
+		if (intervals.length !== confirmationIntervals.length) {
 			return false;
 		}
-		authbeatRegisterIntervals.forEach(function(int, idx) {
-			int = (int + confirmationIntervals[idx]) / 2;
-		});
+		authbeatRegisterIntervals = intervals.map(function(int, idx) {
+			if (Math.abs(int - confirmationIntervals[idx]) > 75) {
+				resetIntervals();
+				resetFields();
+				alert("Intervals too far apart. Please try again.");
+			}
+			var average = Math.round((int + confirmationIntervals[idx]) / 2).toString();
+			return average.length === 4 ? average : '0' + average;
+		}).join('');
 
 		paused = true;
 	}
 
+	function resetIntervals() {
+		intervals = [];
+		confirmationIntervals = [];
+	}
+
+	function resetFields() {
+		registerInput.textContent = '';
+		confirmInput.textContent = '';
+	}
+
 	// add event listeners to password input and submit button
-	submitButton.addEventListener("click", submitScript);
+	submitButton.addEventListener("click", confirmSubmitScript);
 	registerInput.addEventListener("keydown", recordInterval);
 	confirmInput.addEventListener("keydown", recordConfirmationInterval);
 
