@@ -97,6 +97,9 @@
         };
 
         this.register = function(credentials) {
+            if (!credentials.intervals) {
+                return $q.reject({ message : 'Invalid intervals'});
+            }
             return $http.post('/register', credentials)
                 .then(onSuccessfulLogin)
                 .catch(function() {

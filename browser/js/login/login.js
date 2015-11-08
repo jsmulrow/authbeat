@@ -21,11 +21,7 @@ app.controller('LoginCtrl', function ($scope, AuthService, $state) {
 
         $scope.error = null;
 
-        console.log(authbeatLoginIntervals);
-
         loginInfo.intervals = authbeatLoginIntervals;
-
-        console.log("login info", loginInfo);
 
         AuthService.login(loginInfo).then(function () {
             $state.go('home');

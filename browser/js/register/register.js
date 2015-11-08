@@ -23,8 +23,6 @@ app.controller('registerCtrl', function ($scope, AuthService, $state) {
 
         registerInfo.intervals = authbeatRegisterIntervals;
 
-        console.log("register info", registerInfo);
-
         AuthService.register(registerInfo).then(function () {
             $state.go('home');
         }).catch(function () {
@@ -32,8 +30,6 @@ app.controller('registerCtrl', function ($scope, AuthService, $state) {
         });
 
     };
-
-
 
 });
 
